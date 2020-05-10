@@ -1,0 +1,2 @@
+# pip install requirements.txt
+pandas-datareader==0.8.1

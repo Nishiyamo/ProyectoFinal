@@ -11,11 +11,29 @@ soup = BeautifulSoup(page.content, 'html.parser')
 st = soup.find_all('a', class_='C($c-fuji-blue-1-b) Cur(p) Td(n) Fw(500)')
 symbols = list()
 
-# Estraccion de las siglas dentro de las clases
+count = 0
+# Extraction of all the symbols of the list()
 for i in st:
-    symbols.append(i.text)
+    if count < 30:
+        symbols.append(i.text)
+    else:
+        break
+    count +=1
+
+# Scanner of html to take the Toma de cabeceras de bolsa
+nt = soup.find_all('td', class_='Py(10px) Ta(start) Pend(10px)')
+names = list()
+
+count = 0
+# Extraction of all the full names of the list()
+for i in nt:
+    if count < 30:
+        names.append(i.text)
+    else:
+        break
+    count +=1
 
 # To json
-js = pd.DataFrame({'Simbolo': symbols})
+js = pd.DataFrame({'symbol': symbols,'name': names})
 
 print(js)

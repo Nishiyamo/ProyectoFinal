@@ -7,7 +7,7 @@ url = 'https://es.finance.yahoo.com/quote/%5EFTSE/components?p=%5EFTSE'
 page = requests.get(url)
 soup = BeautifulSoup(page.content, 'html.parser')
 
-# Scanner of html to take the Toma de cabeceras de bolsa
+# Scanner of html to take heads from symbols
 st = soup.find_all('a', class_='C($c-fuji-blue-1-b) Cur(p) Td(n) Fw(500)')
 symbols = list()
 
@@ -20,7 +20,7 @@ for i in st:
         break
     count +=1
 
-# Scanner of html to take the Toma de cabeceras de bolsa
+# Scanner of html to take head for names
 nt = soup.find_all('td', class_='Py(10px) Ta(start) Pend(10px)')
 names = list()
 

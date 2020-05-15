@@ -1,10 +1,14 @@
+import json
+
 from bs4 import BeautifulSoup
 import requests
 import pandas as pd
+from DataStatsStockExchange.ApiRealHistoricalPerDay.domain.Select_Stock import select_url_stock_exchange
+from DataStatsStockExchange.ApiRealHistoricalPerDay.domain.ConnectionDB import con
 
-def search(url):
+def search(one_url_stock_exchange):
     # Download of the HTML that contains the first 30 stocks of FTSE100
-    # url = 'https://es.finance.yahoo.com/quote/%5EFTSE/components?p=%5EFTSE'
+    url = one_url_stock_exchange
     page = requests.get(url)
     soup = BeautifulSoup(page.content, 'html.parser')
 
@@ -38,3 +42,12 @@ def search(url):
     js = pd.DataFrame({'symbol': symbols,'name': names})
 
     print(js)
+
+def load_one_url(string):
+    urls_json = json.loads(string)
+    for url in urls_json:
+        search(url['url'])
+
+
+string = select_url_stock_exchange(con())
+load_one_url(string)

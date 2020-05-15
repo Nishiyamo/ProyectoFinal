@@ -12,5 +12,6 @@ def con():
         # print(cur.fetchone()) 
     except Error as e:
         print("Error conectando a mysql: =>", e)
-con()
-    
+
+    return con
+# con()

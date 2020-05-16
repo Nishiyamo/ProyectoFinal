@@ -6,7 +6,7 @@ from DataStatsStockExchange.ApiRealHistoricalPerDay.domain.Select_Stock import s
 from DataStatsStockExchange.ApiRealHistoricalPerDay.domain.ConnectionDB import con
 
 def search(one_url_stock_exchange):
-    # Download of the HTML that contains the first 30 stocks of FTSE100
+    # Download of the HTML that contains the first 30 stocks
     url = one_url_stock_exchange
     page = requests.get(url)
     soup = BeautifulSoup(page.content, 'html.parser')
@@ -40,8 +40,8 @@ def search(one_url_stock_exchange):
     # To json
 
     js = json.dumps([{'symbol': symbols, 'name': names} for symbols, names in zip(symbols, names)])
-    # print(js)
-    return js
+    print(js)
+    # return js
 
 def load_one_url(string):
     urls_json = json.loads(string)

@@ -1,4 +1,12 @@
-from DataStatsStockExchange.ApiRealHistoricalPerDay.domain.Stocks_WebScrap import search
-import json
+from test import Stocks
 
-def loader_stock_exchange():
+db_config=dict(
+        host='127.0.0.1',
+        database='stocksdb',
+        user='root',
+        password='bunta'
+    )
+
+my_stock = Stocks(db_config)
+
+my_stock.print_data()

@@ -4,14 +4,14 @@ import pandas as pd
 from datetime import datetime, timedelta
 
 days_to_subtract = 1
-START_DATE = '2010-01-01'
+START_DATE = '2015-01-01'
 END_DATE = str((datetime.today() - timedelta(days_to_subtract)).strftime('%Y-%m-%d'))
 
 # print(END_DATE)
 
-UK_STOCK = 'AUTO.L' #FTSE 100
-USA_STOCK = 'AMZN' #NASDAQ
-SP_STOCK = 'ANA.MC' #IBEX 35
+UK_STOCK = 'AUTO.L' #FTSE 100 =FTSE
+USA_STOCK = 'AMZN' #NASDAQ =IXIC
+SP_STOCK = 'ANA.MC' #IBEX 35 =IBEX
 
 def clean_data(stock_data, col):
     weekdays = pd.date_range(start = START_DATE, end = END_DATE)
@@ -20,7 +20,7 @@ def clean_data(stock_data, col):
 
 def get_data(ticker):
     try:
-        stock_data = data.DataReader(ticker,'yahoo',START_DATE, END_DATE)
+        stock_data = data.DataReader(ticker, 'yahoo',START_DATE, END_DATE)
         adj_close = clean_data(stock_data, 'Adj Close')
         
         print(adj_close)
@@ -28,4 +28,4 @@ def get_data(ticker):
     except RemoteDataError:
         print("No hay datos para {st}".format(st=ticker))
 
-get_data(UK_STOCK)
+get_data(USA_STOCK)

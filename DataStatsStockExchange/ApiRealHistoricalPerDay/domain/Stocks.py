@@ -1,25 +1,22 @@
+import json
+
 import mysql.connector
 from pandas_datareader import data
 from pandas_datareader._utils import RemoteDataError
-import pandas as pd
-from datetime import datetime, timedelta
-import json
 from bs4 import BeautifulSoup
 import requests
 import pandas as pd
-
 import time
 
+# DEFAULT_START_DATE = '2010-01-01'
+# DEFAULT_END_DATE = str((datetime.today() - timedelta(-1)).strftime('%Y-%m-%d'))
 
-
-DEFAULT_START_DATE = '2010-01-01'
-DEFAULT_END_DATE = str((datetime.today() - timedelta(-1)).strftime('%Y-%m-%d'))
 
 def timeit(method):
     def timed(*args, **kw):
         ts = time.time()
         result = method(*args, **kw)
-        te = time.time()        
+        te = time.time()
         if 'log_time' in kw:
             name = kw.get('log_name', method.__name__.upper())
             kw['log_time'][name] = int((te - ts) * 1000)
@@ -31,16 +28,15 @@ def timeit(method):
 class Stocks:
 
     def __init__(self, db_con, start_date, end_date):
-
         self.load_all_data(db_con, start_date, end_date)
 
     def clean_data(self, stock_data, col):
-        weekdays = pd.date_range(start=DEFAULT_START_DATE, end=DEFAULT_END_DATE)
+        weekdays = pd.date_range(start=self.start_date, end=self.end_date)
         clean_data = stock_data[col].reindex(weekdays)
         return clean_data.fillna(method='ffill')
 
     @timeit
-    def load_all_data(self, db_con, start_date=DEFAULT_START_DATE, end_date=DEFAULT_END_DATE):
+    def load_all_data(self, db_con, start_date, end_date):
         self.load_securities(db_con)
 
         self.data = dict()
@@ -51,7 +47,7 @@ class Stocks:
             for securitie in stock.get('stock_securities'):
                 ticker = securitie.get('symbol')
                 try:
-                    stock_data = data.DataReader(ticker,data_source='yahoo', start=start_date, end=end_date)
+                    stock_data = data.DataReader(ticker, data_source='yahoo', start=start_date, end=end_date)
 
                     all_stock_securities.append({"name": securitie.get("name"), "symbol": securitie.get("symbol"), "data": stock_data})
                     
@@ -59,7 +55,6 @@ class Stocks:
                     print("No hay datos para {st}".format(st=securitie.get("symbol")))
 
             self.data[stock.get("stock_symbol")] = all_stock_securities
-
     
     def load_securities(self, db_con):
         self.load_urls(db_con)
@@ -122,13 +117,12 @@ class Stocks:
 
         self.stock_urls = stock_urls
 
-
     def print_data(self):
 
         for key, data in self.data:
             print("SYMBOL: %s" % key)
-            print("NAME: %s" % data.name)
-            print("DATA: %s" % data.data)
+            print("NAME: %s" % data.get("Name"))
+            print("DATA: %s" % data.get("Data"))
 
     def get_single_securitie(self, securitie_symbol):
 

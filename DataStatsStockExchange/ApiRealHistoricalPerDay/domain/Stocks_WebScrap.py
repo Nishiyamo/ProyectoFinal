@@ -1,5 +1,4 @@
 import json
-
 from bs4 import BeautifulSoup
 import requests
 import pandas as pd
@@ -39,15 +38,16 @@ def search(one_url_stock_exchange):
         count +=1
 
     # To json
-    js = pd.DataFrame({'symbol': symbols,'name': names})
 
-    print(js)
+    js = json.dumps([{'symbol': symbols, 'name': names} for symbols, names in zip(symbols, names)])
+    # print(js)
+    return js
 
 def load_one_url(string):
     urls_json = json.loads(string)
     for url in urls_json:
         search(url['url'])
 
-
+# Load of the different functional methods
 string = select_url_stock_exchange(con())
 load_one_url(string)

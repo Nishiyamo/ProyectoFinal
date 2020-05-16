@@ -1,12 +1,10 @@
 from pandas_datareader import data
 from pandas_datareader._utils import RemoteDataError
-import matplotlib.pyplot as plt
 import pandas as pd
-import numpy as np
 from datetime import datetime, timedelta
 
 days_to_subtract = 1
-START_DATE = '2005-01-01'
+START_DATE = '2010-01-01'
 END_DATE = str((datetime.today() - timedelta(days_to_subtract)).strftime('%Y-%m-%d'))
 
 # print(END_DATE)

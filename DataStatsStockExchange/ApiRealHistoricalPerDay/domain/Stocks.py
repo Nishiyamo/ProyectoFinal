@@ -1,5 +1,3 @@
-import json
-
 import mysql.connector
 from pandas_datareader import data
 from pandas_datareader._utils import RemoteDataError
@@ -51,7 +49,7 @@ class Stocks:
 
                     all_stock_securities.append({"name": securitie.get("name"), "symbol": securitie.get("symbol"), "data": stock_data})
                     
-                except RemoteDataError:
+                except (IOError, RemoteDataError, KeyError):
                     print("No hay datos para {st}".format(st=securitie.get("symbol")))
 
             self.data[stock.get("stock_symbol")] = all_stock_securities

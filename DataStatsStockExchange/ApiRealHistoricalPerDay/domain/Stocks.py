@@ -83,8 +83,9 @@ class Stocks:
             count = 0
             # Extraction of all the full names of the list()
             for i in nt:
-                if count < 30:
-                    names.append(i.text)
+                if count < 60:
+                    if count % 2 != 0:
+                        names.append(i.text)
                 else:
                     break
                 count +=1

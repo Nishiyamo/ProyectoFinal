@@ -1,4 +1,4 @@
-from DataStatsStockExchange.ApiRealHistoricalPerDay.domain.Stocks import Stocks
+from DataStatsStockExchange.domain.Stocks import Stocks
 import argparse
 from datetime import datetime, timedelta
 
@@ -11,6 +11,9 @@ db_config = dict(
 
 def start_stocks(start_date, end_date):
     my_stock = Stocks(db_config, start_date, end_date)
+
+def load_stocks():
+    my_stock = Stocks(db_config)
 
 if __name__ == "__main__":
     # return with "-h" the help of the args

@@ -118,7 +118,7 @@ class Stocks:
 
     def print_data(self):
 
-        for key, data in self.data:
+        for key in self.data:
             print("SYMBOL: %s" % key)
             print("NAME: %s" % data.get("Name"))
             print("DATA: %s" % data.get("Data"))

@@ -5,6 +5,7 @@ from bs4 import BeautifulSoup
 import requests
 import pandas as pd
 import time
+import json
 
 # DEFAULT_START_DATE = '2010-01-01'
 # DEFAULT_END_DATE = str((datetime.today() - timedelta(-1)).strftime('%Y-%m-%d'))
@@ -117,11 +118,17 @@ class Stocks:
         self.stock_urls = stock_urls
 
     def print_data(self):
-
+        count=0
+        with open('data.json', 'w') as f:
+            json.dump(self.data, f)
         for key in self.data:
-            print("SYMBOL: %s" % key)
-            print("NAME: %s" % data.get("Name"))
-            print("DATA: %s" % data.get("Data"))
+            print("Stock: %s" % key)
+            print("Name: %s" % self.data[key][count]['name'])
+            print("Symbol: %s" % self.data[key][count]['symbol'])
+            print("StatClose: %s" % self.data[key][count][data].get('Close'))
+            count +=1
+            if count == 29:
+                count=0
 
     def get_single_securitie(self, securitie_symbol):
 

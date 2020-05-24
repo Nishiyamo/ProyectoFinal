@@ -47,7 +47,8 @@ class Stocks:
                 ticker = securitie.get('symbol')
                 try:
                     stock_data = data.DataReader(ticker, data_source='yahoo', start=start_date, end=end_date)
-
+                    stock_data = json.loads(stock_data.reset_index().to_json(None, orient='records', date_format='iso'))
+                    # print(stock_data)
                     all_stock_securities.append({"name": securitie.get("name"), "symbol": securitie.get("symbol"), "data": stock_data})
                     
                 except (IOError, RemoteDataError, KeyError):
@@ -120,12 +121,12 @@ class Stocks:
     def print_data(self):
         count=0
         with open('data.json', 'w') as f:
-            json.dump(self.data, f)
+            json.dump(self.data, f, ensure_ascii=False)
         for key in self.data:
             print("Stock: %s" % key)
             print("Name: %s" % self.data[key][count]['name'])
             print("Symbol: %s" % self.data[key][count]['symbol'])
-            print("StatClose: %s" % self.data[key][count][data].get('Close'))
+            #print("StatClose: %s" % self.data[key][count][data]['close'])
             count +=1
             if count == 29:
                 count=0

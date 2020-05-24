@@ -12,7 +12,7 @@ db_config = dict(
 def start_stocks(start_date, end_date):
     my_stock = Stocks(db_config, start_date, end_date)
     my_stock.print_data()
-    my_stock.get_single_securitie()
+
 
 def load_stocks():
     my_stock = Stocks(db_config)

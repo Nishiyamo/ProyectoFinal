@@ -3,7 +3,9 @@ import argparse
 from datetime import datetime, timedelta
 
 def start_stocks(start_date, end_date, from_local):
-    Stocks(start_date, end_date, from_local)
+    stocks = Stocks(start_date, end_date, from_local)
+    stocks.save_data()
+
 
 if __name__ == "__main__":
     # return with "-h" the help of the args

@@ -1,18 +1,28 @@
+from copy import deepcopy
+
 from sqlalchemy import Column, String, Float, Date
 from sqlalchemy.ext.declarative import declarative_base
 
 Base = declarative_base()
 
-class EqMixin:
+class SerializableMixin(object):
+    @staticmethod
+    def _serialize(instance):
+        newinstance = deepcopy(instance.__dict__)
+        newinstance.pop('_sa_instance_state')
+        return newinstance
+
+    def serialize(self):
+        return self._serialize(self)
+
+
+class EqMixin(SerializableMixin):
     def _model_attrs(self, instance):
         return self._serialize(instance)
-    # extended from the concept in :
-    # http://stackoverflow.com/questions/390250/elegant-ways-to-support-equivalence-equality-in-python-classes
 
     def __eq__(self, other):
         classes_match = isinstance(other, self.__class__)
         a, b = self._model_attrs(self), self._model_attrs(other)
-        #compare based on equality our attributes, ignoring SQLAlchemy internal stuff
         attrs_match = (a == b)
         return classes_match and attrs_match
 
@@ -24,6 +34,7 @@ class EqMixin:
 
     def __str__(self):
         return self.__repr__()
+
 
 #OBJ Securitie
 class Securitie(EqMixin, Base):

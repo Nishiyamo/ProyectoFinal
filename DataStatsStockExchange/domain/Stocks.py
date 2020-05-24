@@ -6,7 +6,8 @@ import requests
 import pandas as pd
 import time
 import json
-from DataStatsStockExchange.SQLAlchemy.Connector import Securitie, db, Securities_Historico, Select_Origin
+from DataStatsStockExchange.SQLAlchemy.Connector import Securitie, Securities_Historico, Select_Origin
+from DataStatsStockExchange.application.app import db
 
 
 def timeit(method):
@@ -125,6 +126,7 @@ class Stocks:
         with open('data.json', 'w') as f:
             json.dump(self.data, f, ensure_ascii=False)
 
+    @timeit
     def save_data(self):
         for stock_key, stocks in self.data.items():
             for securitie in stocks:

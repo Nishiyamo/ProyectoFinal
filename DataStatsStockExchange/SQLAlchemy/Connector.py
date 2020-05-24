@@ -1,20 +1,9 @@
-from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import create_engine
+from sqlalchemy import Column, String, Float, Date
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import Column, String, Table, Float, Date
-from flask import Flask
-
-app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:bunta@localhost:3306/stocksdb'
-app.config['SQLAQLCHEMY_TRACK_MODIFICATIONS'] = False
-
-db = SQLAlchemy(app)
 
 Base = declarative_base()
 
-# class schema():
-#     Table('securities')
-
+#OBJ Securitie
 class Securitie(Base):
     __tablename__ = 'securities'
 
@@ -30,6 +19,7 @@ class Securitie(Base):
     def __repr__(self):
         return "<Securities(name='%s', symbol='%s', stock='%s')>" % (self.name, self.symbol, self.stock)
 
+#OBJ Securitie_Historica
 class Securities_Historico(Base):
     __tablename__ = 'securities_historico'
 
@@ -45,6 +35,7 @@ class Securities_Historico(Base):
     def __repr__(self):
         return "Securities_Historico(symbol= '%s', adj_close= '%s', date= '%s')" % (self.symbol, self.adj_close, self.date)
 
+#URL OBJ
 class Select_Origin(Base):
     __tablename__ = 'stocks_exchange'
 

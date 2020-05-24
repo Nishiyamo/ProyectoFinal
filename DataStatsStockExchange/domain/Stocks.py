@@ -26,7 +26,10 @@ class Stocks:
 
     def __init__(self, start_date, end_date, from_local=False):
         if from_local:
-            self.load_from_local()
+            try:
+                self.load_from_local()
+            except Exception:
+                self.load_all_data(start_date, end_date)
         else:
             self.load_all_data(start_date, end_date)
 
@@ -60,6 +63,8 @@ class Stocks:
                     print("No hay datos para {st}".format(st=securitie.get("symbol")))
 
             self.data[stock.get("stock_symbol")] = all_stock_securities
+
+        self.save_to_local_data()
 
     def load_securities(self):
         self.load_urls()

@@ -1,4 +1,4 @@
-import mysql.connector
+from datetime import datetime
 from pandas_datareader import data
 from pandas_datareader._utils import RemoteDataError
 from bs4 import BeautifulSoup
@@ -6,9 +6,7 @@ import requests
 import pandas as pd
 import time
 import json
-
-# DEFAULT_START_DATE = '2010-01-01'
-# DEFAULT_END_DATE = str((datetime.today() - timedelta(-1)).strftime('%Y-%m-%d'))
+from DataStatsStockExchange.SQLAlchemy.Connector import Securitie, db, Securities_Historico, Select_Origin
 
 
 def timeit(method):
@@ -26,8 +24,11 @@ def timeit(method):
 
 class Stocks:
 
-    def __init__(self, db_con, start_date, end_date):
-        self.load_all_data(db_con, start_date, end_date)
+    def __init__(self, start_date, end_date, from_local=False):
+        if from_local:
+            self.load_from_local()
+        else:
+            self.load_all_data(start_date, end_date)
 
     def clean_data(self, stock_data, col):
         weekdays = pd.date_range(start=self.start_date, end=self.end_date)
@@ -35,8 +36,13 @@ class Stocks:
         return clean_data.fillna(method='ffill')
 
     @timeit
-    def load_all_data(self, db_con, start_date, end_date):
-        self.load_securities(db_con)
+    def load_from_local(self):
+        with open('data.json', 'r') as f:
+            self.data = json.load(f)
+
+    @timeit
+    def load_all_data(self, start_date, end_date):
+        self.load_securities()
 
         self.data = dict()
 
@@ -48,16 +54,15 @@ class Stocks:
                 try:
                     stock_data = data.DataReader(ticker, data_source='yahoo', start=start_date, end=end_date)
                     stock_data = json.loads(stock_data.reset_index().to_json(None, orient='records', date_format='iso'))
-                    # print(stock_data)
                     all_stock_securities.append({"name": securitie.get("name"), "symbol": securitie.get("symbol"), "data": stock_data})
                     
                 except (IOError, RemoteDataError, KeyError):
                     print("No hay datos para {st}".format(st=securitie.get("symbol")))
 
             self.data[stock.get("stock_symbol")] = all_stock_securities
-    
-    def load_securities(self, db_con):
-        self.load_urls(db_con)
+
+    def load_securities(self):
+        self.load_urls()
 
         stock_list = []
 
@@ -102,34 +107,36 @@ class Stocks:
         
         self.stocks = stock_list
 
-    def load_urls(self, db_con):
-
-        con = mysql.connector.connect(**db_con)
-
-        curs = con.cursor()
-        sql_sentence = "select url, symbol, name from stocks_exchange"
-        curs.execute(sql_sentence)
-        records = curs.fetchall()
-        con.close()
+    def load_urls(self):
+        records = db.session.query(Select_Origin).all()
 
         stock_urls = []
         for row in records:
-            stock_urls.append({'url': row[0], 'symbol': row[1], 'name': row[2]})
+            stock_urls.append({'url': row.url, 'symbol': row.symbol, 'name': row.name})
 
         self.stock_urls = stock_urls
 
-    def print_data(self):
-        count=0
+    def save_to_local_data(self):
         with open('data.json', 'w') as f:
             json.dump(self.data, f, ensure_ascii=False)
-        for key in self.data:
-            print("Stock: %s" % key)
-            print("Name: %s" % self.data[key][count]['name'])
-            print("Symbol: %s" % self.data[key][count]['symbol'])
-            #print("StatClose: %s" % self.data[key][count][data]['close'])
-            count +=1
-            if count == 29:
-                count=0
+
+    def save_data(self):
+        for stock_key, stocks in self.data.items():
+            for securitie in stocks:
+                sec = Securitie(stock=stock_key, name=securitie.get('name'), symbol=securitie.get('symbol'))
+                db.session.add(sec)
+                db.session.commit()
+                print("Inserted securitie: " + sec.__repr__())
+
+                # To bulk insert, best know as bloq insertion, bd improvement
+                sec_data = [
+                    Securities_Historico(symbol=securitie.get('symbol'), adj_close=data.get('Adj Close'),
+                                         date=datetime.fromisoformat(data.get('Date')[0:10]))
+                    for data in securitie.get('data')
+                ]
+
+                db.session.bulk_save_objects(sec_data)
+                db.session.commit()
 
     def get_single_securitie(self, securitie_symbol):
 

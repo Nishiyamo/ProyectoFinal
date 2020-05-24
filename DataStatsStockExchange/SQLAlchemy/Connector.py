@@ -3,8 +3,30 @@ from sqlalchemy.ext.declarative import declarative_base
 
 Base = declarative_base()
 
+class EqMixin:
+    def _model_attrs(self, instance):
+        return self._serialize(instance)
+    # extended from the concept in :
+    # http://stackoverflow.com/questions/390250/elegant-ways-to-support-equivalence-equality-in-python-classes
+
+    def __eq__(self, other):
+        classes_match = isinstance(other, self.__class__)
+        a, b = self._model_attrs(self), self._model_attrs(other)
+        #compare based on equality our attributes, ignoring SQLAlchemy internal stuff
+        attrs_match = (a == b)
+        return classes_match and attrs_match
+
+    def __ne__(self, other):
+        return not self.__eq__(other)
+
+    def __repr__(self):
+        return "%s(%s)" % (self.__class__.__name__, str(self._model_attrs(self)))
+
+    def __str__(self):
+        return self.__repr__()
+
 #OBJ Securitie
-class Securitie(Base):
+class Securitie(EqMixin, Base):
     __tablename__ = 'securities'
 
     name = Column(String(200))
@@ -16,27 +38,23 @@ class Securitie(Base):
         self.symbol = symbol
         self.stock = stock
 
-    def __repr__(self):
-        return "<Securities(name='%s', symbol='%s', stock='%s')>" % (self.name, self.symbol, self.stock)
 
 #OBJ Securitie_Historica
-class Securities_Historico(Base):
+class Securities_Historico(EqMixin, Base):
     __tablename__ = 'securities_historico'
 
     symbol = Column(String(10), primary_key=True)
     adj_close = Column(Float)
-    date = Column(Date)
+    date = Column(Date, primary_key=True)
 
     def __init__(self, symbol, adj_close, date):
         self.symbol = symbol
         self.adj_close = adj_close
         self.date = date
 
-    def __repr__(self):
-        return "Securities_Historico(symbol= '%s', adj_close= '%s', date= '%s')" % (self.symbol, self.adj_close, self.date)
 
 #URL OBJ
-class Select_Origin(Base):
+class Select_Origin(EqMixin, Base):
     __tablename__ = 'stocks_exchange'
 
     name = Column(String(10), primary_key=True)
@@ -48,5 +66,3 @@ class Select_Origin(Base):
         self.url = url
         self.symbol = symbol
 
-    def __repr__(self):
-        return "Select_Origin(name= '%s', url= '%s', symbol= '%s')" % (self.name, self.url, self.symbol)

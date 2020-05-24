@@ -14,4 +14,5 @@ Proyecto Final Ivan Lorenzo Mediavilla 2020
     -> Sacar de https://es.finance.yahoo.com/ el nombre de los stocks a ser la libreria que usa Yahoo Finance,<br>
        esto solo se usara para obtener los datos para alimentar la base de datos.<br>
     -> La parte backend encargada de alimentar al servicio web estara alojada dentro de los archivos del frontend.<br>
--> Para arrancar el servidor flask usaremos el comando "set FLASK_APP = app.py" para settear nuestro proyecto y el comando "python -m flask run" para arrancarlo.<br>
+-> Para arrancar el servidor flask usaremos el comando "python -m DataStatsStockExchange.application.app
+" para arrancarlo.<br>

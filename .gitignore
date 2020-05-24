@@ -1,6 +1,5 @@
 Documentacion/*
 .docx
-Lib/*
 .DS_Store
 node_modules/*
 dist/
@@ -10,3 +9,5 @@ yarn-error.log*
 test/unit/coverage
 test/e2e/reports
 selenium-debug.log
+/Lib/*
+/FrontendStocks/node_modules/*

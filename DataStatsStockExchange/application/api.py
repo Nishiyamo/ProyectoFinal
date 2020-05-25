@@ -31,3 +31,9 @@ class GetSecuritieApi(Resource):
         return StockDataSets.get_securities_basics(stock)
 
 
+class GetStockExchange(Resource):
+    @marshal_with(securitie_marshaller)
+    def get(self):
+        return StockDataSets.get_stock_exchange()
+
+

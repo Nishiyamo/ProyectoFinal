@@ -1,5 +1,5 @@
 <template>
-  <div class="tabs">
+  <div class="tabs" v-model="selectedStock">
     <div
       class="tab-element"
       :class="{'tab-element--selected' : selectedStock == stock.symbol}"
@@ -11,27 +11,29 @@
 
 <script>
 
+  import superagent from "superagent";
+
   export default {
     data() {
       return {
         selectedStock: null,
-        stocks: [{
-          name: 'Indice bursatil de España',
-          symbol: 'IBEX'
-        }, {
-          name: 'Indice bursatil de Estados Unidos',
-          symbol: 'IXIC'
-        }, {
-          name: 'Indice bursatil de Londres',
-          symbol: 'FTSE'
-        }]
+        stocks: []
       }
     },
     methods: {
+      getStocks() {
+        const url = `http://localhost:5001/`
+        superagent.get(url).then(data=> {
+          this.stocks = data.body
+        })
+      },
       emitValue(selectedStock) {
         this.selectedStock = selectedStock
         this.$emit('selectedStock', selectedStock)
       }
+    },
+    beforeMount(){
+        this.getStocks()
     }
   }
 </script>

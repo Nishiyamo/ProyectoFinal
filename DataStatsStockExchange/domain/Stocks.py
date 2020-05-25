@@ -126,8 +126,13 @@ class Stocks:
         with open('data.json', 'w') as f:
             json.dump(self.data, f, ensure_ascii=False)
 
+    def clear_data(self):
+        db.session.query(Securities_Historico).delete()
+        db.session.query(Securitie).delete()
+
     @timeit
     def save_data(self):
+        self.clear_data()
         for stock_key, stocks in self.data.items():
             for securitie in stocks:
                 sec = Securitie(stock=stock_key, name=securitie.get('name'), symbol=securitie.get('symbol'))

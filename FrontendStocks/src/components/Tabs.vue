@@ -16,13 +16,13 @@
       return {
         selectedStock: null,
         stocks: [{
-          name: 'IBEX',
+          name: 'Indice bursatil de España',
           symbol: 'IBEX'
         }, {
-          name: 'NASDAQ',
+          name: 'Indice bursatil de Estados Unidos',
           symbol: 'IXIC'
         }, {
-          name: 'LONDRES',
+          name: 'Indice bursatil de Londres',
           symbol: 'FTSE'
         }]
       }

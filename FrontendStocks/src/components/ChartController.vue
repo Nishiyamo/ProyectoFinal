@@ -1,14 +1,14 @@
 <template>
   <div class="chart-controller">
     <div>
-      <span>Seleccione Securitie: </span>
+      <span>Seleccione Valor de bolsa: </span>
       <select v-model="selectedSecuritie">
         <option :value="null"></option>
         <option v-for="securitie in securities" :value="securitie.symbol">{{securitie.name}}</option>
       </select>
     </div>
     <div>
-      <div style="height:800px;width:1600px;" id="securitiesChart">
+      <div style="height:700px;width:1600px;" id="securitiesChart">
     </div>
     </div>
   </div>
@@ -36,12 +36,30 @@
           this.securities = data.body
         })
       },
-      paintSecuritie(data) {
+      paintSecuritie(data, newVal) {
         const myChart = echarts.init(document.getElementById('securitiesChart'))
 
         const option = {
+            title:{
+              text: newVal
+            },
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: {
+                  type: 'cross'
+                }
+            },
+            legend:{
+            },
+            grid: {
+                left: '3%',
+                right: '4%',
+                bottom: '3%',
+                containLabel: true
+            },
             xAxis: {
                 type: 'category',
+                boundaryGap: false,
                 data: data.labels
             },
             yAxis: {
@@ -62,7 +80,7 @@
         superagent.get(url).then(data=> {
           const labels = data.body.labels
           const dataset = data.body.dataset
-          this.paintSecuritie({labels: labels, dataset: dataset})
+          this.paintSecuritie({labels: labels, dataset: dataset},newVal)
         })
       },
       selectedStock(newVal) {

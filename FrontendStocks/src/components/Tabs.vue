@@ -21,6 +21,9 @@
         }, {
           name: 'NASDAQ',
           symbol: 'IXIC'
+        }, {
+          name: 'LONDRES',
+          symbol: 'FTSE'
         }]
       }
     },
@@ -42,7 +45,7 @@
   }
 
   .tab-element {
-    height: 150px;
+    height: 50px;
     width: 400px;
     text-align: center;
     border: 1px solid black;

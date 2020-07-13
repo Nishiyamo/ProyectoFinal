@@ -2,7 +2,7 @@ from datetime import datetime
 
 from flask_restful import fields
 from sqlalchemy.sql.expression import and_
-from DataStatsStockExchange.SQLAlchemy.Connector import Securities_Historico, Securitie
+from DataStatsStockExchange.SQLAlchemy.Connector import Securities_Historico, Securitie, Select_Origin
 
 
 # Nombre valor (TSL), ADJ_CLOSE, DATE to graphic
@@ -40,4 +40,12 @@ class StockDataSets:
 
         records = query.all()
 
+        return records
+
+
+    @staticmethod
+    def get_stock_exchange():
+        from DataStatsStockExchange.application.app import db
+        query = db.session.query(Select_Origin)
+        records = query.all()
         return records

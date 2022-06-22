@@ -23,7 +23,7 @@ marshmallow-sqlalchemy==0.23.0
 matplotlib==3.2.1
 mysql-connector-python==8.0.20
 mysqlclient==1.4.6
-numpy==1.18.4
+numpy==1.22.0
 pandas==1.0.3
 pandas-datareader==0.8.1
 protobuf==3.11.3
